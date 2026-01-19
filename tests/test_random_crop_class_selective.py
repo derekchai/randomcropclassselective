@@ -8,6 +8,7 @@ TRANSFORM = transform = A.Compose(
         RandomCropClassSelective(crop_height=256,
                                  crop_width=256,
                                  required_classes=[999],
+                                 max_attempts=200,
                                  p=1.0)
     ],
     bbox_params=A.BboxParams(format='albumentations',
@@ -29,12 +30,8 @@ class TestRandomCropClassSelective:
         first place.
         """
 
-        bboxes = [
-            [0, 0, 0.1, 0.1],
-        ]
-        class_labels = [
-            0,
-        ]
+        bboxes = [[0, 0, 0.1, 0.1]]
+        class_labels = [0]
 
         augmented = TRANSFORM(image=BLANK_IMAGE,
                               bboxes=bboxes,
@@ -43,4 +40,22 @@ class TestRandomCropClassSelective:
         transformed_class_labels = augmented['class_labels']
 
         assert 999 not in transformed_class_labels
+
+    def test_required_class_present_after_transformation(self):
+        """
+        Test required class is present in the post-cropping transformation.
+        """
+
+        bboxes = [[0, 0, 0.1, 0.1]]
+        class_labels = [999]
+
+        for i in range(1_000):
+            augmented = TRANSFORM(image=BLANK_IMAGE,
+                                bboxes=bboxes,
+                                class_labels=class_labels)
+
+            transformed_class_labels = augmented['class_labels']
+
+            assert 999 in transformed_class_labels
+
         
