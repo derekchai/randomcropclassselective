@@ -4,11 +4,20 @@ import numpy as np
 class RandomCropClassSelective(DualTransform):
     """
     A custom Albumentations transform which acts as a random crop but 
-    guaranteeing that *at least one* of the classes provided in parameter 
-    `required_classes` will be present in the post-transformation crop.
+    *attempting* to ensure that *at least one* of the classes provided in
+    parameter `required_classes` will be present in the post-transformation
+    crop.
 
     Falls back to a random crop if no crops were generated which contained
     *any* of the required classes within the number of maximum attempts.
+
+    **NOTE!** This transform does *not* necessarily guarantee that there *will*
+    be at least one required class present in the augmented image. The transform
+    works by repeatedly generating crops until one is found where the required
+    class is present in the crop. As such, it is possible that all attempts will
+    be exhausted before any crop is found including a required class. The 
+    `max_attempts` parameter can be adjusted to increase the number of times the
+    transform will attempt to generate a crop, at the expense of running time.
     """
 
     def __init__(self, 
@@ -22,7 +31,7 @@ class RandomCropClassSelective(DualTransform):
         :type crop_height: int
         :param crop_width: Width the image will be cropped to.
         :type crop_width: int
-        :param required_classes: List of classes which must be included in the
+        :param required_classes: List of classes which should be included in the
             image after cropping.
         :type required_classes: list[int]
         :param max_attempts: Maximum number of attempts to crop the image such
