@@ -117,6 +117,9 @@ class RandomCropClassSelective(DualTransform):
         return img[y1:y1+self.crop_height, x1:x1+self.crop_width]
 
     def apply_to_bboxes(self, bboxes: np.ndarray, x1, y1, **params):
+        if len(bboxes) == 0:
+            return np.empty((0, 0))
+
         bboxes_transformed = bboxes.copy()
 
         # set to absolute pixel value w.r.t. original dimensions
