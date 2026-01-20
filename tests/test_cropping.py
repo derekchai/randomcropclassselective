@@ -2,7 +2,8 @@ import albumentations as A
 import pytest
 import cv2
 import numpy as np
-from randomcropclassselective.random_crop_class_selective import RandomCropClassSelective
+from randomcropclassselective.random_crop_class_selective \
+    import RandomCropClassSelective
 
 CROP_SIDE_LENGTH = 256
 
