@@ -23,7 +23,7 @@ def setup():
     yield "hello world"
     print('teardown')
 
-class TestRandomCropClassSelective:
+class TestClassPresence:
     def test_required_class_does_not_exist(self):
         """
         Test required class does not appear if such class does not exist in the
